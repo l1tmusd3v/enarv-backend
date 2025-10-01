@@ -1,17 +1,18 @@
-const admin = require('../services/firebase');
+const admin = require("../services/firebase");
 
-const authMiddleware = async (req, res, next)=>{
-    const token = req.headers.authorization?.split(' ')[1];
+const authMiddleware = async (req, res, next) => {
+  const idToken = req.cookies.access_token;
+  if (!idToken) {
+    return res.status(403).json({ error: "No token provided" });
+  }
 
-    if (!token)
-        return res.status(401).send({message: 'Authorization token missing'});
-
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        req.user = decodedToken;
-        next();
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        return res.status(403).send({message: 'Invalid token'});
-    }
-}
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    console.log("Decoded Token:", decodedToken);
+    next();
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+};
