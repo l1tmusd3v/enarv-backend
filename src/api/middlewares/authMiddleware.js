@@ -1,7 +1,7 @@
 const admin = require("../services/firebase");
 
 const authMiddleware = async (req, res, next) => {
-  const idToken = req.cookies.access_token;
+  const idToken = req.headers.authorization?.split("Bearer ")[1];
   if (!idToken) {
     return res.status(403).json({ error: "No token provided" });
   }
@@ -16,3 +16,6 @@ const authMiddleware = async (req, res, next) => {
     return res.status(403).json({ error: "Unauthorized" });
   }
 };
+
+
+module.exports = authMiddleware;
