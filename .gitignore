@@ -12,3 +12,4 @@ coverage/
 *.zip
 .vscode/
 firebase_key.json
+.vercel
