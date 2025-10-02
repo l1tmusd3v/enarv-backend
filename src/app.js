@@ -7,11 +7,12 @@ const cors = require('cors');
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 const router = require('./api/routes');
 
 app.use('/api', router);
-app.use(cors());
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
