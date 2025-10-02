@@ -26,8 +26,23 @@ const createUser = async (userData) =>{
 
         return rows[0];
     }catch (error){
-        console.error("Error creating user:", error);
-        throw error;
+         if (error.code === 'ER_DUP_ENTRY') {
+      const customError = new Error('User already exists');
+      customError.statusCode = 409;
+      
+      
+      if (error.sqlMessage.includes('PRIMARY')) {
+        customError.field = 'user_id';
+      } else if (error.sqlMessage.includes('email')) {
+        customError.field = 'email';
+      } else if (error.sqlMessage.includes('username')) {
+        customError.field = 'username';
+      }
+      
+      throw customError;
+    }
+    
+    throw error;
     }
 }
 
