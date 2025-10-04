@@ -47,13 +47,13 @@ const { updatePreferencesSchema, createUpdatePreferencesSchema } = require('../v
  *               wantsToConnectFriends:
  *                 type: boolean
  *             example:
- *               favoriteGenres: ["Fantasy", "Science Fiction", "History"]
+ *               favoriteGenres: ["fantasy", "science_fiction", "history"] 
  *               fictionBalance: "mostly_non_fiction"
  *               readingPace: "standard"
- *               annualGoal": 24
- *               motivations": ["discovering_authors", "hitting_goals"]
- *               lovedBookRecent": "Project Hail Mary"
- *               wantsToConnectFriends": true
+ *               annualGoal: 24              
+ *               motivations: ["discovering_authors", "hitting_goals"] 
+ *               lovedBookRecent: "Project Hail Mary" 
+ *               wantsToConnectFriends: true   
  *     responses:
  *       '200':
  *         description: Preferences updated successfully.
