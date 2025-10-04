@@ -21,7 +21,7 @@ exports.updatePreferences = async (req, res) => {
 
         res.status(200).json({
             message: "Preferences updated successfully",
-            preferences: updatedUser.preferences
+            preferences: JSON.parse(updatedUser.preferences)
         });
     }catch (error){
         console.error('Error in updatePreferences controller:', error);

@@ -12,6 +12,7 @@ const swaggerSpec = require('./config/swaggerConfig');
 
 const authRoutes = require('./api/routes/authRoutes');
 const userRoutes = require('./api/routes/userRoutes');
+const cookieParser = require('cookie-parser');
 
 
 const app = express();
@@ -19,7 +20,7 @@ const app = express();
 // --- GLOBAL MIDDLEWARE ---
 app.use(cors());
 app.use(express.json()); 
-
+app.use(cookieParser())
 // --- SWAGGER DOCUMENTATION ROUTE ---
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

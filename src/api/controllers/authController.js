@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const admin = require("../services/firebase");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -7,12 +8,14 @@ exports.registerUser = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { username, full_name, bio } = req.body || {};
-    if (!username || !full_name) {
-      return res.status(400).json({ error: "Username and full name are required" });
+    const { username, full_name, bio, dob} = req.body || {};
+    if (!username || !full_name || !dob) {
+      return res.status(400).json({ error: "Username, full name and date of birth are required" });
+    }
+     if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+      return res.status(400).json({ message: 'Date of birth must be in YYYY-MM-DD format.' });
     }
 
-    // Validate input format
     if (typeof username !== 'string' || username.trim().length === 0) {
       return res.status(400).json({ error: "Invalid username format" });
     }
@@ -26,7 +29,8 @@ exports.registerUser = async (req, res) => {
       email,
       username: username.trim(),
       full_name: full_name.trim(),
-      bio: bio ? bio.trim() : null
+      bio: bio ? bio.trim() : null,
+      dob
     };
 
     const createdUser = await userModel.createUser(newUser);
@@ -65,3 +69,48 @@ exports.registerUser = async (req, res) => {
     });
   }
 };
+
+exports.login = async (req, res)=>{
+  try{
+    const { idToken } = req.body;
+
+    if (!idToken){
+      return res.status(400).json({ error: "ID token is required" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { uid } = decodedToken;
+
+    const user = await userModel.findById(uid);
+    if (!user){
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 1 * 24 * 60 * 60 * 1000 // 1 day
+    }
+
+    res.cookie('authToken', idToken, cookieOptions);
+
+    return res.status(200).json({ message: "Login successful",
+      user: {
+        id: user.user_id,
+        email: user.email,
+        username: user.username,
+        full_name: user.full_name,
+        bio: user.bio,
+      }
+     });
+  }catch(error){
+    console.error("Error in user login:", {
+      errorType: error.code || error.name,
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+
+    return res.status(401).json({ error: "Invalid or expired ID token" });
+  }
+}

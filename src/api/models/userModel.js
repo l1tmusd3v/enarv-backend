@@ -13,14 +13,14 @@ const findUserByEmail = async (email) => {
 };
 
 const createUser = async (userData) =>{
-    const { user_id, email, username, full_name, bio } = userData;
+    const { user_id, email, username, full_name, bio, dob } = userData;
 
     try{
         const sql = `
-            INSERT INTO Users (user_id, email, username, full_name, bio, role)
-            VALUES (?, ?, ?, ?, ?, 'user')
+            INSERT INTO Users (user_id, email, username, full_name, bio, role, dob)
+            VALUES (?, ?, ?, ?, ?, 'user', ?)
         `;
-        await db.execute(sql, [user_id, email, username, full_name, bio]);
+        await db.execute(sql, [user_id, email, username, full_name, bio, dob]);
 
         const [rows] = await db.execute('SELECT * FROM Users WHERE user_id = ?', [user_id]);
 
@@ -67,9 +67,20 @@ const updatePreferences = async (userId, preferences) =>{
     throw error;
   }
 }
+const findById = async (userId) =>{
+  try{
+    const [rows] = await db.execute('SELECT * FROM Users WHERE user_id = ?', [userId]);
+    return rows[0]||null;
+  }catch (error){
+    console.error("Error finding user by ID:", error);
+    throw error;
+  }
+}
+
 
 module.exports ={
     findUserByEmail,
     createUser,
-    updatePreferences
+    updatePreferences,
+    findById
 }

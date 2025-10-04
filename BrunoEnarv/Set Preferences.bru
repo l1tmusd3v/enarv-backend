@@ -1,0 +1,34 @@
+meta {
+  name: Set Preferences
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3306/users/preferences
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "favoriteGenres": [
+      "fantasy",
+      "science_fiction",
+      "history"
+    ],
+    "fictionBalance": "mostly_non_fiction",
+    "readingPace": "standard",
+    "annualGoal": 24,
+    "motivations": [
+      "discovering_authors",
+      "hitting_goals"
+    ],
+    "lovedBookRecent": "Project Hail Mary",
+    "wantsToConnectFriends": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}
