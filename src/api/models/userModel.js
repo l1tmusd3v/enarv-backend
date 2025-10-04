@@ -46,7 +46,30 @@ const createUser = async (userData) =>{
     }
 }
 
+const updatePreferences = async (userId, preferences) =>{
+  try{
+    const preferencesString = JSON.stringify(preferences);
+    const sql = `
+      UPDATE Users
+      SET preferences = ?
+      WHERE user_id = ?
+    `;
+    const [result] = await db.execute(sql, [preferencesString, userId]);
+
+    if (result.affectedRows === 0){
+      return null;
+    }
+
+    const [rows] = await db.execute('SELECT * FROM Users WHERE user_id = ?', [userId]);
+    return rows[0];
+  }catch (error){
+    console.error("Error updating user preferences:", error);
+    throw error;
+  }
+}
+
 module.exports ={
     findUserByEmail,
-    createUser
+    createUser,
+    updatePreferences
 }
