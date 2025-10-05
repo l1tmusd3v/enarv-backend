@@ -33,8 +33,6 @@ exports.getOnboardingOptions = async (req, res) => {
     try{
         const options = await optionService.getOptionsCache();
 
-        console.log('Onboarding options retrieved:', options);
-
         res.status(200).json({ options });
     }catch (error){
         console.error('Error in getOnboardingOptions controller:', error);
