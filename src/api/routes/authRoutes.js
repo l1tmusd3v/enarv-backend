@@ -39,15 +39,12 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *               bio:
  *                 type: string
  *                 description: A short biography for the user (optional).
- *               dob:
- *                 type: string
- *                 format: date
- *                 description: "User's date of birth in YYYY-MM-DD format."
+ *           
  *             example:
  *               username: "john_doe"
  *               full_name: "John Doe"
  *               bio: "Lover of classic literature."
- *               dob: "1990-05-15"
+ *               
  *     responses:
  *       '201':
  *         description: User registered successfully.

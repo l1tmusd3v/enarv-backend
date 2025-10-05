@@ -70,5 +70,53 @@ router.put(
   validate(createUpdatePreferencesSchema),
   userController.updatePreferences
 );
-
+/**
+ * @swagger
+ * /users/preferences/options:
+ *   get:
+ *     summary: Get Onboarding Preference Options
+ *     description: Retrieves a structured object of all available, admin-configurable choices for the user onboarding flow (e.g., reading paces, motivations). This allows the frontend to dynamically build the selection UI.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: A JSON object with keys for each question and arrays of options as values.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 readingPace:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       value:
+ *                         type: string
+ *                         example: "standard"
+ *                       label:
+ *                         type: string
+ *                         example: "Standard (1-2 weeks)"
+ *                 motivations:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       value:
+ *                         type: string
+ *                         example: "discovering_authors"
+ *                       label:
+ *                         type: string
+ *                         example: "Discovering new authors"
+ *               # ... other keys like 'fictionBalance' would also be present
+ *       '401':
+ *         description: Unauthorized - No token provided.
+ *       '500':
+ *         description: Internal Server Error.
+ */
+router.get(
+  '/preferences/options',
+  userController.getOnboardingOptions
+);
 module.exports = router;

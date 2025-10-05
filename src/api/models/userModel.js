@@ -1,5 +1,5 @@
 const db = require("../../config/database");
-
+const admin = require("../services/firebase");
 const findUserByEmail = async (email) => {
     try{
         const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
@@ -17,10 +17,10 @@ const createUser = async (userData) =>{
 
     try{
         const sql = `
-            INSERT INTO Users (user_id, email, username, full_name, bio, role, dob)
-            VALUES (?, ?, ?, ?, ?, 'user', ?)
+            INSERT INTO Users (user_id, email, username, full_name, bio, role)
+            VALUES (?, ?, ?, ?, ?, 'user')
         `;
-        await db.execute(sql, [user_id, email, username, full_name, bio, dob]);
+        await db.execute(sql, [user_id, email, username, full_name, bio]);
 
         const [rows] = await db.execute('SELECT * FROM Users WHERE user_id = ?', [user_id]);
 
@@ -77,10 +77,22 @@ const findById = async (userId) =>{
   }
 }
 
+const deleteById = async (userId)=>{
+  try{
+    await admin.auth().deleteUser(userId);
+
+    const result = await db.execute('DELETE FROM Users WHERE user_id = ?', [userId]);
+    return result.affectedRows;
+  }catch (error){
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+}
 
 module.exports ={
     findUserByEmail,
     createUser,
     updatePreferences,
-    findById
+    findById,
+    deleteById
 }

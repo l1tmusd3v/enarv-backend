@@ -1,5 +1,5 @@
 const userModel = require('../models/userModel');
-
+const optionService = require('../services/optionsService');
 
 exports.updatePreferences = async (req, res) => {
     try {
@@ -26,5 +26,19 @@ exports.updatePreferences = async (req, res) => {
     }catch (error){
         console.error('Error in updatePreferences controller:', error);
     res.status(500).json({ message: 'An internal server error occurred.' });
+    }
+};
+
+exports.getOnboardingOptions = async (req, res) => {
+    try{
+        const options = await optionService.getOptionsCache();
+
+        console.log('Onboarding options retrieved:', options);
+
+        res.status(200).json({ options });
+    }catch (error){
+        console.error('Error in getOnboardingOptions controller:', error);
+        res.status(500).json({ message: 'An internal server error occurred.' });
+
     }
 };

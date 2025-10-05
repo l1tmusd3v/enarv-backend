@@ -8,12 +8,9 @@ exports.registerUser = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const { username, full_name, bio, dob} = req.body || {};
-    if (!username || !full_name || !dob) {
-      return res.status(400).json({ error: "Username, full name and date of birth are required" });
-    }
-     if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
-      return res.status(400).json({ message: 'Date of birth must be in YYYY-MM-DD format.' });
+    const { username, full_name, bio} = req.body || {};
+    if (!username || !full_name) {
+      return res.status(400).json({ error: "Username and full name are required" });
     }
 
     if (typeof username !== 'string' || username.trim().length === 0) {
@@ -29,8 +26,7 @@ exports.registerUser = async (req, res) => {
       email,
       username: username.trim(),
       full_name: full_name.trim(),
-      bio: bio ? bio.trim() : null,
-      dob
+      bio: bio ? bio.trim() : null  
     };
 
     const createdUser = await userModel.createUser(newUser);

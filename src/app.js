@@ -12,6 +12,7 @@ const swaggerSpec = require('./config/swaggerConfig');
 
 const authRoutes = require('./api/routes/authRoutes');
 const userRoutes = require('./api/routes/userRoutes');
+const adminRoutes = require('./api/routes/adminRoutes');
 const cookieParser = require('cookie-parser');
 
 
@@ -28,6 +29,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 
 
 app.get('/', (req, res) => {

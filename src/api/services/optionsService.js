@@ -26,10 +26,14 @@ const loadOptions = async() =>{
 const getOptions = (questionKey) =>{
     return optionsCache[questionKey] || [];
 }
+const getOptionsCache = () => {
+    return optionsCache;
+}
 
 loadOptions();
 
 module.exports = {
     getOptions,
+    getOptionsCache,
     loadOptions
 };
